@@ -1,0 +1,28 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>IIS 6, Windows Server 2003 Service Pack 1 and Development without Administrative Privileges</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    5/22/2005 10:38:00 PM</time>
+<hr>
+<div id='content'><P>Wow, that's a long title;-).</P>
+<P><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">As you probably know I am still developing without administrative privileges on my Windows systems. Even with Visual Studio 2005 Beta 2 it works very well (with knowing a couple of tricks like configuring the Administrative Tools Shortcuts with “Run As”). </SPAN><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">But since I have installed <STRONG><EM>Windows Server 2003 Service Pack 1</EM></STRONG> I was not able creating Web Projects as non-admin anymore although I have set the permissions according to the <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vstechart/html/tchDevelopingSoftwareInVisualStudioNETWithNon-AdministrativePrivileges.asp">MSDN article</A>. </SPAN><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">While Visual Studio (2003 and 2005) is able sharing a directory as web directory it cannot configure it as application anymore – therefore I had to do that manually. But know I have found out how (as expected it's one of the Web Servers COM components security configuration) - to solve this issue and get back to the original comfort in combination with staying secure as least-privileged user. All you need to do is the following configuration (not more and not less):<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></SPAN></P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">Open Administrative Tools – Component Services<o:p></o:p></SPAN></DIV>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">Navigate to My Computer – DCOM Config – IIS WAMREG admin service<o:p></o:p></SPAN></DIV>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">Open the Properties of IIS WAMREG admin service and switch to the security tab.<o:p></o:p></SPAN></DIV>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">Configure Security for Launch and Activation Permissions so that your non-admin developer user has full control for launching this application.<o:p></o:p></SPAN></DIV></LI></UL>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">With those two settings you have the necessary permission for calling the DCOM component (IIS WAMREG admin service) which is responsible for configuring IIS.<o:p></o:p></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-GB style="mso-ansi-language: EN-GB">That’s it...</SPAN></P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

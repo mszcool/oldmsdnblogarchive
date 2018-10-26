@@ -1,0 +1,24 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>TechEd Developers Barcelona - Windows SharePoint Workflow Project Templates</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    11/8/2006 8:18:00 AM</time>
+<hr>
+<div id='content'><P>Within this little blog-post you can find the SharePoint Workflow Project Templates that I have used in my Demo Extravaganzza session on Tuesday - they are also available within the <A class="" href="http://www.microsoft.com/downloads/details.aspx?familyid=38ca6b32-44be-4489-8526-f09c57cd13a5&amp;displaylang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?familyid=38ca6b32-44be-4489-8526-f09c57cd13a5&amp;displaylang=en">ECM Starter Kit</A> as an installer-package. As I have used these templates with a build very close to the final release I expect those templates to work with the final release as well. To install the templates, please follow the following steps:</P>
+<UL>
+<LI>Unzip the ZIP Archive I have attached to this blog post.</LI>
+<LI>Open a Command Prompt and execute <STRONG>install.bat</STRONG>.</LI>
+<LI>The Install.bat script actually sets up the project templates for Visual Studio 2005, but it does not import the snippets nor does it add the controls to the tool-box. So you have to do that manually.</LI>
+<LI>To add the Activities to the toolbox, just create a new Tab in Visual Studio's toolbox and call it "SharePoint Workflow". Then right-click the toolbox and select <STRONG>Choose Items. </STRONG>All all Activities that you can find within the <STRONG>Microsoft.sharepoint.WorkflowActions</STRONG> assembly (you can use the "add items" dialog-box to filter based on the Microsoft.SharePoint.Workflow namespace name).</LI>
+<LI>Next you can import the code snippets using the Visual Studio 2005 Code Snippet Manager (CTRL+K, CTRL+B), which are by default copied to the <STRONG>"%ProgramFiles%\Microsoft Visual Studio 8\Xml\1033\Snippets\SharePoint Workflow"</STRONG> directory. I'd recommend adding the whole folder in the code-snippets manager - then you are going to get exactly the same experience as I got in my session.</LI></UL>
+<P>If you want to have a more convenient way of installing the templates, they are part of a sample project which has been published on MSDN. Finally <A class="" href="http://www.microsoft.com/downloads/details.aspx?familyid=38ca6b32-44be-4489-8526-f09c57cd13a5&amp;displaylang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?familyid=38ca6b32-44be-4489-8526-f09c57cd13a5&amp;displaylang=en">these templates are part of the Enterprise Content Management Starter Kit</A> which has been released for Beta 2 of Office SharePoint Server.</P>
+<p><a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Components.PostAttachments/00/01/03/50/29/SharePoint%20Workflow%20Support.zip" original-url="http://blogs.msdn.com/cfs-file.ashx/__key/communityserver-components-postattachments/00-01-03-50-29/SharePoint-Workflow-Support.zip">SharePoint Workflow Support.zip</a></p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

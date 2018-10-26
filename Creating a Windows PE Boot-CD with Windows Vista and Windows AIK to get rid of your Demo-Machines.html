@@ -1,0 +1,61 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Creating a Windows PE Boot-CD with Windows Vista and Windows AIK to get rid of your Demo-Machines</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    12/30/2006 4:53:00 PM</time>
+<hr>
+<div id='content'><P>About two months ago&nbsp;I discovered the <A class="" title=WAIK href="http://www.microsoft.com/downloads/details.aspx?FamilyID=c7d4bc6d-15f3-4284-9123-679830d629f2&amp;DisplayLang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?FamilyID=c7d4bc6d-15f3-4284-9123-679830d629f2&amp;DisplayLang=en">Windows Automated Installation Toolkit (Windows AIK or just WAIK)</A> to be able to work with different demo images for the sessions I did at <A class="" title=TechEd href="http://www.mseventseurope.com/TechEd/06/pre/defaultDev.aspx" mce_href="http://www.mseventseurope.com/TechEd/06/pre/defaultDev.aspx">TechEd Europe</A> with physical machines instead of the (still much slower:)) Virtual PC images. The WAIK includes <A class="" title=imagex href="http://technet.microsoft.com/en-us/windowsvista/aa905116.aspx" mce_href="http://technet.microsoft.com/en-us/windowsvista/aa905116.aspx">imagex.exe</A>, which is a tool that allows you to create images of a partition of your machine and package them into the new <A class="" title=WIM href="http://technet.microsoft.com/en-us/windowsvista/aa905116.aspx" mce_href="http://technet.microsoft.com/en-us/windowsvista/aa905116.aspx">Windows Imaging Files (WIM)</A>.</P>
+<P><STRONG><EM>The first steps using WAIK and imagex.exe</EM></STRONG></P>
+<P>These files can be used for centralized deployment via the <A class="" title="Windows Deployment Services" href="http://technet.microsoft.com/en-us/windowsvista/aa905118.aspx" mce_href="http://technet.microsoft.com/en-us/windowsvista/aa905118.aspx">Windows Deployment Services</A> (successor of Remote Installation Services). But in my case I used it to image and restore different types of demo images for my physical machines as I did not want to work with the slower VPC counterparts at a conference such as TechEd Europe. Therefore I created two partitions on my developer machine, one with my primary OS-instance (Vista joined into our working domain for email etc.) and a second partition for my different demo images. On the second partition I installed Windows Server 2003 with everything I needed for my&nbsp;demo sessions (different images, detailled&nbsp;steps see&nbsp;below)&nbsp;and then I created an WIM-image from the Vista OS instance using imagex.exe from the WAIK as follows:</P>
+<P><EM>imagex /capture D: M:\WindowsImages\Windows2003_OfficeDev.wim "Windows Server 2003 Office Development"</EM></P>
+<P mce_keep="true">This command captures everything on drive "D:" into a WIM file stored on my external hard disk "M:". Then I tried the demos for the session and to get the original situation again I just restored the image as follows:&nbsp;</P>
+<P mce_keep="true"><EM>format D: /q<BR>...<BR>imagex /apply M:\WindowsImages\Windows2003_OfficeDev.wim 1 D:\</EM></P>
+<P mce_keep="true">To get the complete picture, here is what I did for <A class="" title=TechEd href="http://www.mseventseurope.com/TechEd/06/pre/defaultDev.aspx" mce_href="http://www.mseventseurope.com/TechEd/06/pre/defaultDev.aspx">TechEd</A> where I required for example one image for SharePoint 2007 Office Development, one image for Windows Vista for&nbsp;WPF and Composite UI Application Block Development and a third one for plain, old Office 2003 development (during the beta stage of Office 2007 and especially VSTO 2005 SE installing Office 2003 and Office 2007 side-by-side was not supported... right now fortunately this is supported and works really fine, therefore I have tried the imaging stuff on several machines, already):</P>
+<OL>
+<LI>
+<DIV mce_keep="true">First I created a basic install of Windows Server 2003 on my second partition D:</DIV></LI>
+<LI>
+<DIV mce_keep="true">Then I installed my main Vista partition for regular work (email, development in our office etc.).</DIV></LI>
+<LI>
+<DIV mce_keep="true">On my main Vista instance I installed the WAIK.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Then I have created the first image of the Windows Server 2003 partition using imagex /capture.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Afterwards I installed everything for Office 2003 development on this Windows Server 2003.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Now I captured this Office 2003 development workstation using imagex /capture.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Next I restored the original Windows Server 2003 instance using imagex /apply.</DIV></LI>
+<LI>
+<DIV mce_keep="true">On the restored instance of Windows Server 2003 I installed everything for Office 2007 development.</DIV></LI>
+<LI>
+<DIV mce_keep="true">I imaged the Office 2007 development workstation using imagex /capture, again.</DIV></LI>
+<LI>
+<DIV mce_keep="true">Now I had my demo images as WIM-images available and could switch between Office 2003 and Office 2007 (beta at that point of time;)) within 15 min. by restoring the appropriate image via imagex /apply.</DIV></LI></OL>
+<P mce_keep="true">With that, management of my demo partitions became really fairly easy and I was not forced to use Virtual PCs but still remain with the same advantages such as restoring an original stage of my machines very quickly.</P>
+<P mce_keep="true"><STRONG><EM>Creating a Windows PE image using WAIK</EM></STRONG></P>
+<P>The next step&nbsp;was fairly obvious.&nbsp;At home I used the days between&nbsp;Christmas and New Year to get my IT infrastructure done, at home. And of course I wanted to have a very smooth way of restoring my&nbsp;test servers and workstations quickly if something goes wrong. So my idea was creating WIM images for each of the servers and either deploying them via <A class="" title="Windows Deployment Services" href="http://technet.microsoft.com/en-us/windowsvista/aa905118.aspx" mce_href="http://technet.microsoft.com/en-us/windowsvista/aa905118.aspx">Windows Deployment Services</A> from my PDC or just from external hard disks. But I don't want to have two OS instances on each machine (one for imaging and image restore and the other one for "productive work"). So I required a CD-bootable version of Windows to be used as imaging and restore OS-instance with imagex.exe installed. Finally the WAIK includes all the tools for creating Windows PE instances which are bootable from either CDs, DVDs or USB sticks (!!).</P>
+<P>I thought before the new year starts right now I need to try something risky with my home machine:) After searching a while I've found to blog entries which are uncovering some details for creating Windows PE images (<A class="" title="Windows PE Getting Started" href="http://blogs.technet.com/jamesone/archive/2006/11/10/getting-started-with-windows-pe.aspx" mce_href="http://blogs.technet.com/jamesone/archive/2006/11/10/getting-started-with-windows-pe.aspx">first</A>, <A class="" title="Windows PE Customizing" href="http://blogs.technet.com/jamesone/archive/2006/11/11/customizing-windows-pe.aspx" mce_href="http://blogs.technet.com/jamesone/archive/2006/11/11/customizing-windows-pe.aspx">second</A>... thanks to <A class="" title="James O'Neill" href="http://blogs.technet.com/jamesone" mce_href="http://blogs.technet.com/jamesone">James O'Neill</A>)... but frankly the steps are so simple that I was completly surprised:</P>
+<OL>
+<LI>Download and install <A class="" title=WAIK href="http://www.microsoft.com/downloads/details.aspx?FamilyID=c7d4bc6d-15f3-4284-9123-679830d629f2&amp;DisplayLang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?FamilyID=c7d4bc6d-15f3-4284-9123-679830d629f2&amp;DisplayLang=en">WAIK</A> (obvious:))</LI>
+<LI>Open the <EM>"Windows PE Tools Command Prompt"</EM></LI>
+<LI>Create a directory for the template of your Windows PE image (e.g. <EM>C:\WinPE</EM> as I use it here)</LI>
+<LI>Next switch to <EM>"C:\Program Files\Windows AIK\Tools\PETools"</EM></LI>
+<LI>Execute <EM>"copype x86 C:\WinPE"</EM></LI>
+<LI>Now copy anything (tools, programs etc.) you want into the ISO directory of your Windows PE template directory (in my case "C:\WinPE"). You can create any sub directory you want within the ISO sub-directory such as "Imaging" in the example below where I copy the imagex.exe tool to the Imaging directory of my ISO template directory as follows:<BR><EM>&nbsp; copy "C:\Program Files\Windows AIK\Tools\x86\imagex.exe" c:\WinPE\ISO\Imaging</EM></LI>
+<LI>Then switch to <EM>"C:\Program Files\Windows AIK\Tools\PETools\x86"</EM></LI>
+<LI>Now apply the original Windows PE boot image:<BR><EM>&nbsp; imagex /apply winpe.wim 1 c:\WinPE\mount</EM></LI>
+<LI>Using the peimg.exe tool you can install either additional drivers by specifying an INF-file or pre-built packages such as MDAC, MSXML or Windows Scripting support. Examples:<BR><EM>&nbsp; peimg /install=WinPE-XML-Package C:\WinPE\mount<BR>&nbsp; peimg /install=WinPE-Scripting-Package C:\WinPE\mount</EM></LI>
+<LI>After the "mount" directory has been prepared (using peimg.exe as shown above) you can create a WIM image for your ISO-template directory as follows:<BR><EM>&nbsp; imagex /capture /boot /compress max "C:\WinPE\mount" "C:\winpe\iso\sources\boot.wim" "mszCool PE"</EM></LI>
+<LI>Next you need to create the ISO-image that you can burn onto a CD using any tool you want (such as Nero).<BR><EM>&nbsp; Oscdimg -n c:\winpe\ISO c:\winpe\mszCool_winpe.iso -n -bc:\winpe\etfsboot.com</EM></LI>
+<LI>Using the OSCDIMG.EXE tool you have created a ready-to-use ISO image that you can burn onto a CD. That CD is then a bootable version of Windows PE. From within this CD-booted instance you can image and restore any partition on your computer you want - for free:)</LI></OL>
+<P>As I wanted to have some fun and risk on the second-last day of this year, I just tried this on my home workstation by imaging and restoring my primary OS-instance partition (which is the boot-partition as well;))... and it just rocks... work of about 40 min. including all the Internet search on how-to create such a Windows PE images.</P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

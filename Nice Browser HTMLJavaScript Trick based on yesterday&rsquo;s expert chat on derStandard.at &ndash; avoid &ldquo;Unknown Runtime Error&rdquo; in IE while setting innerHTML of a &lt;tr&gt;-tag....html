@@ -1,0 +1,71 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Nice Browser HTML/JavaScript Trick based on yesterday&rsquo;s expert chat on derStandard.at &ndash; avoid &ldquo;Unknown Runtime Error&rdquo; in IE while setting innerHTML of a &lt;tr&gt;-tag...</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    1/21/2010 12:25:00 AM</time>
+<hr>
+<div id='content'><P>Yesterday someone during our Cloud-Computing chat at derstandard.at (see <A href="http://derstandard.at/1262209524950/Chat-Nachlese-Wir-machen-uns-gern-selbst-das-Leben-schwer" mce_href="http://derstandard.at/1262209524950/Chat-Nachlese-Wir-machen-uns-gern-selbst-das-Leben-schwer">here</A>) someone asked me why his JavaScript and HTML work in any browser but not IE incl. IE8... See the problem in his code and a solution below (you can download the solution <A href="http://cid-d37c9d7bfbce8418.skydrive.live.com/self.aspx/Public/Various/20100120%5e_derStandard%5e_Chat%5e_HtmlJavaScriptTip.zip" mce_href="http://cid-d37c9d7bfbce8418.skydrive.live.com/self.aspx/Public/Various/20100120%5e_derStandard%5e_Chat%5e_HtmlJavaScriptTip.zip">here</A>)… </P>
+<P><SPAN style="TEXT-DECORATION: underline"><STRONG><SPAN style="FONT-SIZE: 14pt">Problem – He posted the following code below:</SPAN><BR></STRONG></SPAN>When launching his code, IE fails while executing the JavaScript below when trying to set the <STRONG>innerHMTL</STRONG> of the <STRONG>&lt;tr ="q"/&gt;</STRONG> tag. Unfortunately IE's error message isn't really helpful because it just gives us a stupid "Unknown Runtime Error" which is really annoying. </P>
+<P>Unfortunately the IE-engine below is right with saying that what we're doing is incorrect, unfortunately it doesn't tell us the reason. So what is the reason? Whenever setting the innerHTML of an element with JavaScript DOM, IE calls an internal method called ValidateObject which validates the current HTML element DOM-tree whether is right or not. The method implements a <STRONG>very strong validation</STRONG> and this validation says, that a <STRONG>&lt;tr&gt;-tag can contain only child-nodes (more exactly td or th) but not any text or HTML. Therefore the method says, that calling innerHTML on a &lt;tr&gt;-element is not valid – you need to add new "elements" to a tr-element (as it can contain elements, only) by using createChildElement() and appendChild().</STRONG> Scroll down to the bottom of this post to see, which code is working for both, IE and Firefox (I've tested it with IE8 and Firefox 3.5.7!!!). </P>
+<P>HTML file: </P>
+<P style="MARGIN-LEFT: 36pt"><SPAN style="FONT-FAMILY: Courier New">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" <BR>"http://www.w3.org/TR/xhtml1... t.dtd"&gt;<BR>&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"&gt; <BR>&lt;head&gt; <BR>&lt;title&gt;Test&lt;/title&gt; <BR>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt; <BR>&lt;script type="text/javascript" src="test.js" mce_src="test.js"&gt;&lt;/script&gt; <BR>&lt;/head&gt; <BR>&lt;body&gt; <BR>&lt;table&gt; <BR>&lt;tr id="q"&gt;&lt;td&gt; &lt;/td&gt;&lt;/tr&gt; <BR>&lt;/table&gt; <BR>&lt;p&gt;&lt;input type="hidden" id="c" value="ab cd e fg " /&gt;&lt;/p&gt; <BR>&lt;/body&gt; <BR>&lt;/html&gt; </SPAN></P>
+<P>Javascript file (test.js) </P>
+<P style="MARGIN-LEFT: 36pt"><SPAN style="FONT-FAMILY: Courier New">var i = 0; <BR>var j = 0; <BR>var itv; <BR>function init() { <BR>document.getElementById("q").innerHTML = ""; <BR>itv = window.setInterval("displayText()", 200); <BR>} </SPAN></P>
+<P style="MARGIN-LEFT: 36pt"><SPAN style="FONT-FAMILY: Courier New">function displayText() { <BR>var c = document.getElementById("c").value; <BR>var q = ""; <BR>while (c.substring(i, (i + 1)) != " ") { <BR>q = q + c.substring(i, (i + 1)); <BR>i++; <BR>} <BR>i++; j++; <BR>if (j == 4) { window.clearInterval(itv); } <BR>document.getElementById("q").innerHTML = document.getElementById("q").innerHTML + "&lt;td&gt;" + q + "&lt;/td&gt;"; <BR>} <BR>window.onload=init; </SPAN></P>
+<P><SPAN style="FONT-SIZE: 14pt"><SPAN style="TEXT-DECORATION: underline"><STRONG>The real Cross-Browser Solution for the Problem:</STRONG></SPAN> </SPAN></P>
+<P>Okay, as setting innerHTML on a &lt;tr&gt;-element doesn't work, the alternative approach would be using createElement() and appendChild(). I did exactly that and tested it in Firefox 3.5.7 and IE8… and guess what, it works:) see the correct JavaScript-code below (I didn't change anything on the HTML): </P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> i = 0; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> j = 0; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> itv; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">function</SPAN> init() { </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> element = document.createElement(<SPAN style="COLOR: #a31515">"td"</SPAN>); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> tr = document.getElementById(<SPAN style="COLOR: #a31515">"q"</SPAN>); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">if</SPAN> (tr.childNodes.length &gt; 0) { </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// Remove all childs - we know we have just one </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// so just remove the first one </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">tr.removeChild(tr.childNodes.item(0)); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">} </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// !!! Following line is Wrong, </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// !!! because TR can only have "child-Nodes" </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; COLOR: green; FONT-SIZE: 9pt">// !!! in its object model and not any text or HTML </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// !!! therefore --&gt; innerHTML cannot be set!!! </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">//document.getElementById("q").innerHTML = ""; </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// Correct way works in both, Firefox and IE </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> emptyTd = document.createElement(<SPAN style="COLOR: #a31515">"td"</SPAN>); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// Here works because TD can include any text and HTML</SPAN> </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">emptyTd.innerHTML = <SPAN style="COLOR: #a31515">""</SPAN>; <SPAN style="COLOR: green"></SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">tr.appendChild(emptyTd); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">itv = window.setInterval(<SPAN style="COLOR: #a31515">"displayText()"</SPAN>, 200); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">} </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">function</SPAN> displayText() { </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> c = document.getElementById(<SPAN style="COLOR: #a31515">"c"</SPAN>).value; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> q = <SPAN style="COLOR: #a31515">""</SPAN>; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">while</SPAN> (c.substring(i, (i + 1)) != <SPAN style="COLOR: #a31515">" "</SPAN>) { </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">q = q + c.substring(i, (i + 1)); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">i++; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">} </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">i++; j++; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">if</SPAN> (j == 4) { window.clearInterval(itv); } </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// What are you doing below, you're adding </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// invalid HTML to a table row element (TR) which is supposed to have </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// &lt;td&gt; or &lt;th&gt; elements, only - so don't wonder that this </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; COLOR: green; FONT-SIZE: 9pt">// won't work </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">//document.getElementById("q").innerHTML = </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; COLOR: green; FONT-SIZE: 9pt">// document.getElementById("q").innerHTML + "&lt;td&gt;" + q + "&lt;/td&gt;"; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> tr = document.getElementById(<SPAN style="COLOR: #a31515">"q"</SPAN>); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: green">// Append a new TD-node </SPAN></SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt"><SPAN style="COLOR: blue">var</SPAN> newTd = document.createElement(<SPAN style="COLOR: #a31515">"td"</SPAN>); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">newTd.innerHTML = q; </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">tr.appendChild(newTd); </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">} </SPAN></P>
+<P><SPAN style="FONT-FAMILY: Courier New; FONT-SIZE: 9pt">window.onload = init; </SPAN></P>
+<P>I hope I answered the question from the chat with this posting and I hope this posting helps others as well;) have a nice day...</P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

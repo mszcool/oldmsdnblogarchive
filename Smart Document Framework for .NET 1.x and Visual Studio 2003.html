@@ -1,0 +1,21 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Smart Document Framework for .NET 1.x and Visual Studio 2003</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    5/1/2005 11:59:00 PM</time>
+<hr>
+<div id='content'><P>This week I have published my Smart Document Framework (download <A href="http://www.gotdotnet.com/Community/UserSamples/Details.aspx?SampleGuid=94197d33-82a3-4912-88d1-3bf0f783c5e2">here</A>)&nbsp;as User Sample on <A href="http://www.gotdotnet.com">www.gotdotnet.com</A>. I have created this framework for a customer to simplify development of Smart Docs with VS 2003 and VSTO 2003. Okay, it's shortly before Visual Studio 2005 ships but I have created that for a customer who wants to go into production this summer (that's the case for our customer), and I think I would not want to roll out beta software to hundrets of clients (although the build is really very stable...). The framework brings the paradigm of controls to the ISmartDocument interface and adds a couple of things for faster and easier development like</P>
+<UL>
+<LI>Per-Document instance state management<BR>Actually Word and Excel create just one instance of an ISmartDocument implementation per launched process. That means if you start&nbsp;a document template multiple times on the same machine, only one instance of your ISmartDocument class is created. Well that's cool for saving resources (yeah :-) on today's machines...) but if you keep state in your ISmartDocument as simple members the state is shared across all opened documents. The infrastructure includes state-management down to the level of control properties. 
+<LI>Composition of Smart Documents<BR>If you have already created one Smart Document and want to reuse it's schema as well as UI rendering code in another Smart Document you can do that with the framework as I have split up the implementation of ISmartDocument and the actual UI logic code into two separate parts - a DocumentHandler and a Controller.</LI></UL>
+<P>Although I think the framework makes development of Smart Docs with Visual Studio 2003 much easier I clearly have to state that developing such solutions is much more than just writing some code for creating a couple of user interfaces. It's much more important to have the different contextual situations for the users in mind and design the schema documents appropriately. I'll post more on that later but for the while you can take a look at the framework here: <A href="http://www.gotdotnet.com/Community/UserSamples/Details.aspx?SampleGuid=94197d33-82a3-4912-88d1-3bf0f783c5e2">http://www.gotdotnet.com/Community/UserSamples/Details.aspx?SampleGuid=94197d33-82a3-4912-88d1-3bf0f783c5e2</A></P>
+<P>Oh yeah, just one more statement: of course you can use the framework for free but I'd suggest if you don't need to go into production this calendar-year start developing the solutions with Visual Studio 2005 Tools For Office. They are much better in terms of designer support and supported controls (as full-blown Windows Forms Controls are supported now). ... but ... the right schema design is still the most important thing there as well.</P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

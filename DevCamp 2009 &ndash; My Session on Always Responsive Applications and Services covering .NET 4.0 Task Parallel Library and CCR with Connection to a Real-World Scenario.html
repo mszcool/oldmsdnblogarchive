@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>DevCamp 2009 &ndash; My Session on Always Responsive Applications and Services covering .NET 4.0 Task Parallel Library and CCR with Connection to a Real-World Scenario</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    10/15/2009 2:57:02 AM</time>
+<hr>
+<div id='content'><p>Maybe some of you have read the Whitepaper I’ve written together with two architects from Frequentis AG (Ulrich Hüttinger and Stefan Domnanovits) a few months ago. At the <a href="http://www.devcamp.at/">DevCamp 2009 Conference</a> I baked that into a session now!</p>  <p align="center"><a href="http://blogs.msdn.com/mszcool/archive/2009/04/15/whitepaper-always-responsive-clients-and-services-with-wpf-and-wcf-frequentis-ag-tracking-tracing-logbook-for-maritime-communications.aspx">Download the paper by clicking here if you haven’t read it, yet.</a></p>  <p>Finally after giving a presentation at TechReay, Microsoft’s internal conference for technical and strategic education, I managed to give a “fine-tuned” version of the session for the first time in Europe – at our local <a href="http://www.devcamp.at/">Developer Camp 2009 conference</a> organized by key-partners of Microsoft in Austria.</p>  <p>If you’re interested in seeing the concepts of the paper in action using <strong>.NET 4.0 Task Parallel Library</strong>, then check out the presentation material and the <strong>running demo solution</strong>.</p>  <p align="center"><a href="http://www.mszcool.at/blog/2009/20091013_DevCamp2009_AlwaysResponsiveApps.zip">Download the Demo and Presentation here!!</a></p>  <p>The demo solution isn’t an easy thing, it’s really a little prototype to show the job/queue/command pattern using Task parallel library in an end-2-end-fashion:</p>  <ul>   <li>client doing his tasks with Jobs in the background to be always responsive </li>    <li>little service bus example sitting in the middle coordinating the communication between all working positions and a few back end services. </li>    <li>back end services leveraging the “job-pattern” as well for asynchronous and scalable processing of incoming requests. </li> </ul>  <p>Note that the sample also includes a CCR-based implementation. If you don’t have CCR/DSS installed on your machine, just comment-out the CcrManager-class in the JobLibrary-assembly.</p>  <p>As promised I will provide the back-port to Visual Studio 2008 containing just the CCR-based implementation so that those who don’t have Visual Studio 2010, yet, will have a chance to take a look at the sample, as well!</p>  <p>If you have any questions, feel free asking me!!!</p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

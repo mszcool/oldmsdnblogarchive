@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>LINQ to SQL and my Previous Architectural Thoughts</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    6/25/2008 5:16:19 PM</time>
+<hr>
+<div id='content'><p>Thanks to Jim Wooley I have to extend what I wrote about my <a href="http://blogs.msdn.com/mszcool/archive/2008/06/13/linq-workshop-with-ernst-young-which-data-access-technology-should-i-use-my-thoughts.aspx">LINQ-Architecture thoughts before</a>. Actually LINQ to SQL supports putting the OR-Mapping definitions into a separate XML file instead of having the mapping meta data applied as attributes on your classes and properties. Just take a look at the following blog-entry: </p>  <p><a title="http://www.thinqlinq.com/Default/LINQ-to-SQL-support-for-POCO.aspx" href="http://www.thinqlinq.com/Default/LINQ-to-SQL-support-for-POCO.aspx">http://www.thinqlinq.com/Default/LINQ-to-SQL-support-for-POCO.aspx</a></p>  <p>It describes how-to put the OR-Mapping meta data into a separate XML file.</p>  <p>Nevertheless the mapping-mechanisms of LINQ-to-SQL are much simpler compared to full-blown OR-Mapping frameworks such as the ADO.NET entity framework. And still I believe that the performance of simpler mapping mechanisms will be higher, of course. So the fact that this is possible does not really change anything to my recommendations in terms of deciding which DB technology to use when;)</p>  <p>Anyway, thanks to Jim who pointed me to the link above. It's pretty cool that LINQ-to-SQL also supports a more &quot;generic&quot; mapping approach even for the small-to-medium sized applications.</p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

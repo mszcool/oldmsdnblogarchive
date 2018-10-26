@@ -1,0 +1,32 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>TechEd Developers 2006 - Pre-Conference Sessions on Visual Studio Tools for Office including WPF Interop</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    11/7/2006 6:41:00 AM</time>
+<hr>
+<div id='content'><P>Yesterday <A class="" href="http://blogs.msdn.com/eric_carter" mce_href="http://blogs.msdn.com/eric_carter">Eric Carter</A>, Martin Sawicki, both are Program Managers of the VSTO team at Microsoft Corp. in Redmond and I delivered a whole pre-conference on VSTO at TechEd Europe: Developers in Barcelona. I delivered a pre-conference with deep technical details on Visual Studio 2005 Tools for Office. You can find the downloads here within this blog-entry.</P>
+<P>Primarily I did the part on ActionsPane and Smart Documents based on VSTO 2005 based on the experience I made about a year ago within the Smart Docs project we did with Data Systems Austria, one of the largest ISVs in Austria. I primarily covered the following parts and demos:</P>
+<UL>
+<LI>What makes a Smart Document really "Smart"?</LI>
+<LI>DEMO on building context sensitive Smart Documents with Word</LI>
+<LI>Smart Tags and how they can be programmed in VSTO 2005 Doc-Level customizations</LI>
+<LI>DEMO on building a Smart Tag together with using ActionsPanes within a Word Document</LI>
+<LI>Schema Design proven practices for creating Smart Documents as well as archtectural guidance on create VSTO Smart Document solutions for large enterprise projects.</LI>
+<LI>DEMO on building re-usable UI-controls that can be used in WinForms and VSTO Office solutions.</LI></UL>
+<P>Finally the re-usabiltiy demo was a good indicator for me to show, how you can use Windows Presentation Foundation controls within an Office solution. Fortunately with the Windows Forms Integration Assemblies that is fairly easy. All you need to do is developing a WPF control and then adding a reference within your VSTO solution to that WPF control. In addition you need to add references to the WPF-required .NET 3.0 assemblies which are WindowsBase.dll, WindowsFormsIntegration.dll, PresentationCore.dll and finally&nbsp;PresentationFramework.dll. With the following code then you can add the WPF control to your Office Document Actions Pane:</P><FONT color=#0000ff size=2><FONT color=#0000ff size=2>
+<BLOCKQUOTE>
+<P>using</FONT><FONT size=2><FONT color=#000000> System;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> System.Data;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> System.Drawing;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> System.Windows.Forms;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> Microsoft.VisualStudio.Tools.Applications.Runtime;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> Word = Microsoft.Office.Interop.Word;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> Office = Microsoft.Office.Core;<BR></FONT></FONT><FONT color=#0000ff size=2>using</FONT><FONT size=2><FONT color=#000000> Microsoft.Office.Tools.Word;<BR></FONT></FONT><STRONG><FONT color=#0000ff size=2><BR>// This is required for Windows Forms Interoperability<BR>using</FONT><FONT size=2><FONT color=#000000> System.Windows.Forms.Integration;</FONT></FONT>&nbsp;</STRONG></P>
+<P>public</FONT><FONT size=2> </FONT><FONT color=#0000ff size=2>partial</FONT><FONT size=2> </FONT><FONT color=#0000ff size=2>class</FONT><FONT size=2> ThisDocument<BR>{<BR></FONT><FONT size=2>&nbsp; </FONT><FONT color=#0000ff size=2>private</FONT><FONT size=2> TestWPFControl.UserControl1 ucWPF = </FONT><FONT color=#0000ff size=2>new</FONT><FONT size=2> TestWPFControl.UserControl1();</P>
+<P></FONT><FONT color=#0000ff size=2>&nbsp; private</FONT><FONT size=2> </FONT><FONT color=#0000ff size=2>void</FONT><FONT size=2> ThisDocument_Startup(</FONT><FONT color=#0000ff size=2>object</FONT><FONT size=2> sender, System.</FONT><FONT color=#008080 size=2>EventArgs</FONT><FONT size=2> e)<BR>&nbsp; {<BR></FONT><FONT color=#008000 size=2>&nbsp;&nbsp;&nbsp; </FONT><FONT size=2>ElementHost host = </FONT><FONT color=#0000ff size=2>new</FONT><FONT size=2> ElementHost();<BR>&nbsp;&nbsp;&nbsp; host.Height = 400;<BR>&nbsp;&nbsp;&nbsp; host.Child = ucWPF;<BR>&nbsp;&nbsp;&nbsp; ucWPF.SomethingSelected += <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#0000ff size=2>new</FONT><FONT size=2> </FONT><FONT color=#008080 size=2>EventHandler</FONT><FONT size=2>&lt;TestWPFControl.StringEventArgs&gt;(ucWPF_SomethingSelected);<BR>&nbsp;&nbsp;&nbsp; ActionsPane.Controls.Add(host);<BR>&nbsp; </FONT><FONT size=2>}<BR>}</P></BLOCKQUOTE></FONT>
+<P>You can find all the code-samples from the session including the WPF demo within the downloads of this blog post.</P>
+<P>Finally we had about 160 attendees in both pre-conferences of my track - the SharePoint&nbsp;pre-conf and the VSTO pre-conf which is pretty cool. I hope you enjoyed it - for us it was definitely a great experience;)</P>
+<p><a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Components.PostAttachments/00/01/01/48/49/TechEdPreConfDemos.zip" original-url="http://blogs.msdn.com/cfs-file.ashx/__key/communityserver-components-postattachments/00-01-01-48-49/TechEdPreConfDemos.zip">TechEdPreConfDemos.zip</a></p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

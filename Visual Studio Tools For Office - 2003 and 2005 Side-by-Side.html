@@ -1,0 +1,18 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Visual Studio Tools For Office - 2003 and 2005 Side-by-Side</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    7/8/2005 4:15:00 AM</time>
+<hr>
+<div id='content'><P>Currently I am using both, Visual Studio 2003 and Visual Studio 2005 for creating Smart Document solutions. I have installed Visual Studio 2003 and 2005 side-by-side on one machine and when you want to debug solutions written with .NET 1.1 you have to bare in mind, that Office 2003 (winword.exe and excel.exe) always loads the newest version of the .NET Framework into it's process. Therefore if you want to debug solutions with Visual Studio 2003, you have to create a configuration files for winword.exe and excel.exe called <STRONG>winword.exe.config</STRONG> and <STRONG>excel.exe.config</STRONG> and put it into the program files directory of Office (&lt;DRIVE&gt;\Program Files\Microsoft Office\Office11). These configuration files specify the runtime that should be loaded for an executable as follows (contents of winword.exe.config and excel.exe.config):</P>
+<P><FONT face="Courier New">&lt;configuration&gt;<BR>&nbsp;&nbsp; &lt;startup&gt;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;requiredRuntime version="v1.1.4322" safemode="false" /&gt;<BR>&nbsp;&nbsp; &lt;/startup&gt;<BR>&lt;/configuration&gt;</FONT></P>
+<P>With this configuration files in place winword.exe and excel.exe load the v1.1.4322 of the .NET runtime and therefore you can debug the solution with Visual Studio 2003 as usual. As soon as you want to work with Visual Studio 2005 again you just need to rename these configuration files (for example to winword.exe.config.11 and excel.exe.config.11) and Office loads the 2.0 (or latest) version of the runtime again. If you then want to switch back to Visual Studio 2003 again, just rename them to winword.exe.config and excel.exe.config again - That's it...</P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

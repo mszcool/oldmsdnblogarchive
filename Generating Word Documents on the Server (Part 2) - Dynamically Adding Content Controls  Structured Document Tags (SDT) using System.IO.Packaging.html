@@ -1,0 +1,213 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Generating Word Documents on the Server (Part 2) - Dynamically Adding Content Controls / Structured Document Tags (SDT) using System.IO.Packaging</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    7/31/2007 9:34:37 AM</time>
+<hr>
+<div id='content'><p><em>This blog entry is all about dynamically adding content controls on the server to a word document and binding them to content of a custom XML data island which is generated on the server as well! You can download the sample code <a href="http://mszcool.members.winisp.net/Demos/072007_OpenXmlBlog/OfficeOpenXmlBlog_v2.zip">here</a>.</em></p> <p>With my last <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">blog entry</a> I started a little series about generating Word documents on the server using the <a href="http://www.ecma-international.org/memento/TC45.htm">ECMA Office Open XML File Formats</a> and the System.IO.Packaging API. I mentioned a couple of options for generating documents through code and the one I presented in the <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">first post</a> used the simplest approach available - embedding a custom XML document using the <a href="http://www.codeplex.com/dbe">Word Content Control toolkit</a> into the Word document and using content controls to bind parts of the document to elements of this custom XML.</p> <p>The biggest advantage of the solution I presented was its simplicity: generating the document on the server was not more than creating object instances of classes based on the XML schema of the embedded custom XML and serializing it into a package part of the Open XML package. As the content controls where databound to the parts of the custom XML the contents of the document were updated automatically when the user opened the document with Word. On the other hand the biggest drawback finally was, that we had a fixed structure of our document which was not extensible. We embedded a custom XML with a limited number of invoice items and bound them to content controls - in our example we used 5 invoice items. For many cases this might be enough, but for other cases this can be an inaceptable&nbsp;limitation.</p> <p><strong><em>The obvious extension to our project</em></strong></p> <p align="left">Of course we build on top of the project we started creating <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">in the last post</a>. The obvious extension to the approach of course is modifying our code so that it dynamically extends the Word table used for displaying the invoice items for each new invoice item which is dynamically added to the custom XML of the document. That means our template is not bound to exactly 5 invoice items which are hard-bound to the appropriate 5 invoice items in our custom XML as it was the case in our last version. Basically that means we can work with any number of invoice items serialized into our custom XML and that we need to dynamically add new rows to the Word table of our template and dynamically add content controls (structured document tags) to our Word table rows which are bound to the appropriate InvoiceItem element in our custom XML.</p> <p align="center"><a href="media/TNBlogsFS/BlogFileStorage/blogs_msdn/mszcool/WindowsLiveWriter/GeneratingWordDocumentsonTheServerPart2u_CA40/clip_image003%5B3%5D%5B1%5D%5B1%5D%5B1%5D.gif" original-url="http://blogs.msdn.com/blogfiles/mszcool/WindowsLiveWriter/GeneratingWordDocumentsonTheServerPart2u_CA40/clip_image003%5B3%5D%5B1%5D%5B1%5D%5B1%5D.gif" atomicselection="true"><img height="271" alt="clip_image003[3][1][1][1]" src="media/TNBlogsFS/BlogFileStorage/blogs_msdn/mszcool/WindowsLiveWriter/GeneratingWordDocumentsonTheServerPart2u_CA40/clip_image003%5B3%5D%5B1%5D%5B1%5D%5B1%5D_thumb.gif" original-url="http://blogs.msdn.com/blogfiles/mszcool/WindowsLiveWriter/GeneratingWordDocumentsonTheServerPart2u_CA40/clip_image003%5B3%5D%5B1%5D%5B1%5D%5B1%5D_thumb.gif" width="456" border="0"></a></p> <p><em><u>What are typical scenarios for this approach</u></em></p> <p>Again you have a fixed structure of your document which needs to be extended&nbsp;based on content&nbsp;you&nbsp;get&nbsp;from some sources such as databases, services etc. on the server side or&nbsp;from within your application. The structure of the&nbsp;parts which are extended&nbsp;does not&nbsp;change, but it needs to be extended with something like repeating sections.&nbsp;Most important: <strong><em>you need to keep the document surface (UI) in sync with the underlying data source and the underlying data source needs to be updated whenever the user changes the document as this datasource will be processed on the server or by your application programmatically afterwards.</em></strong></p> <p><em><u>How does this approach work?</u></em></p> <p>Basically this approach is an extension of the approach introduced in the <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">last blog posting</a> of this series. Again you serialize a custom XML data island into your package using XmlSerializer but this time you do not limit the number of invoice items in your custom XML. Therefore it adds a second step: after you have generated the custom XML on the server and serialized it into the package, you need to process the Word Processing ML on the server as well as you need to clone table row nodes in your Word table and dynamically add content controls (structured document tags) where you then modify the dataBinding attribute to point to the invoice item in the custom XML for which the table row has been created.</p> <p><em><u>What are the advantages of this approach?</u></em></p> <ul> <li>You maintain a clear separation of the document UI (document content in Word ML) and your actual business data through custom XML as with the approach demonstrated in the <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">previous posting</a> of this article series. <li>Therefore you still can write program logic that works directly with your business-data structure based on an XML schema.  <li>With content control, business data is automatically updated in both, the document and the custom XML data island without writing additional, client sode code. </li></ul> <p><em><u>What are the disadvantages of this approach?</u></em></p> <ul> <li>It works with Word 2007, only. Although you can open the files with older versions of Office without any problems, older versions of Office don't have the functionality of Content Controls available as this was not implemented in previous Office versions, yet.</li> <li>This approach is harder to implement than the one introduced in the <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">previous posting</a> and it requires you having much deeper know-how about the Word Processing Markup language (Word ML).</li> <li>You need to work with some sort of XML API - the one I used is XML DOM with the XmlDocument object which might lead to performance problems on heavy load. This disadvantage can be mitigated by using XmlReader / XmlWriter technologies. But a switch to XmlReader / XmlWriter does not come without a drawback: the logic gets a little harder to implement compared to XmlDocument.</li></ul> <ul></ul> <p><em><u>Extending our Sample Implementation</u></em></p> <p>The first step for extending the sample implementation we started creating in <a href="http://blogs.msdn.com/mszcool/archive/2007/07/09/ecma-office-open-xml-options-for-generating-word-documents-on-the-server.aspx">the last posting</a> is adding a new button to the ASP.NET application for dynamically adding new Invoice Items to our Invoice - as shown here:</p><pre class="code"><span style="color: rgb(0,0,255)">protected</span> <span style="color: rgb(0,0,255)">void</span> Button4_Click(<span style="color: rgb(0,0,255)">object</span> sender, <span style="color: rgb(43,145,175)">EventArgs</span> e)
+{
+    <span style="color: rgb(0,128,0)">// Add a new invoice node
+</span>    <span style="color: rgb(43,145,175)">InvoiceElement</span> Invoice =
+        Session[<span style="color: rgb(43,145,175)">InvoiceAdapter</span>.CurrentInvoiceTemplateKey] <span style="color: rgb(0,0,255)">as</span> <span style="color: rgb(43,145,175)">InvoiceElement</span>;
+
+    <span style="color: rgb(43,145,175)">InvoiceElementInvoiceItem</span>[] NewArray = 
+        <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">InvoiceElementInvoiceItem</span>[Invoice.InvoiceItems.Length + 1];
+    Invoice.InvoiceItems.CopyTo(NewArray, 0);
+
+    NewArray[NewArray.Length - 1] = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">InvoiceElementInvoiceItem</span>();
+    NewArray[NewArray.Length - 1].ItemNumber = NewArray.Length;
+    NewArray[NewArray.Length - 1].ItemName = <span style="color: rgb(163,21,21)">"[new item]"</span>;
+
+    Invoice.InvoiceItems = NewArray;
+
+    InvoiceItemSource.Select();
+    GridView1.DataBind();
+}</pre>
+<p><a href="http://11011.net/software/vspaste"></a>This event procedure gets the current Invoice from the ASP.NET session and adds a new InvoiceItem. As XSD.EXE did not generate nice, handy List&lt;T&gt; properties we need to extend the array for our invoice items manually. Nice, isn't it:) Anyway - for each invoice item which we add this way to our object graph we need to generate a separate table row in the word table with - and that's important now - <strong><em>new content controls bound to the appropriate row</em></strong>. Okay, that means our event handling routine of the button used for generating the document now needs to update the custom XML with the invoice we've created in our ASP.NET page as well as update the Word document itself to add new content controls as follows.</p><pre class="code"><span style="color: rgb(0,0,255)">protected</span> <span style="color: rgb(0,0,255)">void</span> Button2_Click(<span style="color: rgb(0,0,255)">object</span> sender, <span style="color: rgb(43,145,175)">EventArgs</span> e)
+{
+    <span style="color: rgb(0,128,0)">// First of all we retrieve the invoice
+</span>    <span style="color: rgb(43,145,175)">InvoiceAdapter</span>.CalculateTotals();
+    <span style="color: rgb(43,145,175)">InvoiceElement</span> Invoice =
+        Session[<span style="color: rgb(43,145,175)">InvoiceAdapter</span>.CurrentInvoiceTemplateKey] <span style="color: rgb(0,0,255)">as</span> <span style="color: rgb(43,145,175)">InvoiceElement</span>;
+
+    <span style="color: rgb(0,128,0)">// First of all copy the template for this approach
+</span>    <span style="color: rgb(0,0,255)">string</span> templatePath = Server.MapPath(<span style="color: rgb(163,21,21)">"~/InvoiceTemplate_Hard.docx"</span>);
+    <span style="color: rgb(0,0,255)">string</span> generatedPath = Server.MapPath
+                           (
+                                <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"~/Generated/Invoice{0}.docx"</span>,
+                                              Invoice.InvoiceNumber)
+                           );
+    <span style="color: rgb(0,0,255)">if</span> (<span style="color: rgb(43,145,175)">File</span>.Exists(generatedPath))
+        <span style="color: rgb(43,145,175)">File</span>.Delete(generatedPath);
+    <span style="color: rgb(43,145,175)">File</span>.Copy(templatePath, generatedPath);
+
+    <span style="color: rgb(0,128,0)">// Now open the package using the packaging API and generating content
+</span>    <span style="color: rgb(0,0,255)">using</span> (<span style="color: rgb(43,145,175)">Package</span> p = <span style="color: rgb(43,145,175)">Package</span>.Open(generatedPath))
+    {
+<strong><em>        UpdateCustomXml(p, Invoice);
+        UpdateWordDocument(p, Invoice);</em></strong>
+        p.Flush();
+    }
+
+    StatusLabel.Text = 
+        <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"Successfully generated invoice Invoice{0}.docx!!"</span>, 
+                      Invoice.InvoiceNumber);
+}</pre>
+<p>Again we copy a template (this time called InvoiceTemplate_Hard.docx) and copy it to our folder for generated invoices. Before that we calculate the totals of our invoice using the business object adapter I've included and then we retrieve the Invoice from the current ASP.NET session. Afterwards we simply open the package, but this time just serializing the invoice object as custom XML part as we did it last time is not enough. This is just one of two steps which I've encapsulated into a method called <strong><em>UpdateCustomXml(package, InvoiceElement)</em></strong> as follows:</p><pre class="code"><span style="color: rgb(0,0,255)">private</span> <span style="color: rgb(0,0,255)">void</span> UpdateCustomXml(<span style="color: rgb(43,145,175)">Package</span> p, <span style="color: rgb(43,145,175)">InvoiceElement</span> Invoice)
+{
+    <span style="color: rgb(0,128,0)">// Here we open up the custom XML part included in the word document
+</span>    <span style="color: rgb(0,128,0)">// and append new invoice items to our invoice
+</span>    <span style="color: rgb(43,145,175)">Uri</span> XmlPartUri = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">Uri</span>(<span style="color: rgb(163,21,21)">"/customXml/item1.xml"</span>, <span style="color: rgb(43,145,175)">UriKind</span>.Relative);
+    <span style="color: rgb(43,145,175)">PackagePart</span> XmlPart = p.GetPart(XmlPartUri);
+
+    <span style="color: rgb(0,128,0)">// Now we just serialize the invoice into the custom XML
+</span>    <span style="color: rgb(0,128,0)">// This time we can create as many invoice items as we want.
+</span>    <span style="color: rgb(0,0,255)">using</span> (<span style="color: rgb(43,145,175)">Stream</span> s = XmlPart.GetStream(<span style="color: rgb(43,145,175)">FileMode</span>.Create))
+    {
+        <span style="color: rgb(43,145,175)">XmlSerializer</span> serializer = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">XmlSerializer</span>(<span style="color: rgb(0,0,255)">typeof</span>(<span style="color: rgb(43,145,175)">InvoiceElement</span>));
+        serializer.Serialize(s, Invoice);
+    }
+}</pre>
+<p><a href="http://11011.net/software/vspaste"></a>Still this very simple, but now we are getting to the much harder part - updating the Word document for extending the Word table with new content controls bound to the appropriate parts of our custom XML serialized into the package in the UpdateCustomXml method. The steps for doing this are the following:</p>
+<ol>
+<li>First we load the Word document into an XmlDocument instance. 
+<li>Then we create an XmlNamespaceManager with the Word namespace as we will execute some XPath queries while processing the document. 
+<li>Next we will retrieve the &lt;w:tbl /&gt; node through an XPath expression. 
+<li>Then we will retrieve the second row (!!) of the table as this is the first real content row (the first row contains the headers and the last row contains the summary. 
+<li>For each invoice item in our invoice we clone the previously selected row and update the databindings of the content controls, update their aliases and IDs as they need to be unique. 
+<li>Last but not least we save the modified XmlDocument back to the package part to update the Word document (Word ML part of the document).</li></ol>
+<p>This logic is encapsulated into the <strong><em>UpdateWordDocument(Package, InvoiceElement)</em></strong> method as you can see below:</p><pre class="code"><span style="color: rgb(0,0,255)">private</span> <span style="color: rgb(0,0,255)">void</span> UpdateWordDocument(<span style="color: rgb(43,145,175)">Package</span> p, <span style="color: rgb(43,145,175)">InvoiceElement</span> Invoice)
+{
+    <span style="color: rgb(0,128,0)">// Step 1: loading the Word document into an XmlDocument<br></span>    <span style="color: rgb(43,145,175)">Uri</span> WordDocUri = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">Uri</span>(<span style="color: rgb(163,21,21)">"/word/document.xml"</span>, <span style="color: rgb(43,145,175)">UriKind</span>.Relative);
+    <span style="color: rgb(43,145,175)">PackagePart</span> WordDocPart = p.GetPart(WordDocUri);
+    <span style="color: rgb(43,145,175)">XmlDocument</span> WordDoc = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">XmlDocument</span>();
+    <span style="color: rgb(0,0,255)">using</span> (<span style="color: rgb(43,145,175)">Stream</span> s = WordDocPart.GetStream())
+    {
+        WordDoc.Load(s);
+    }
+
+    <span style="color: rgb(0,128,0)">// Step 2: Create an XmlNamespaceManager for XPath queries
+</span>    <span style="color: rgb(43,145,175)">XmlNamespaceManager</span> NsMgr = <span style="color: rgb(0,0,255)">new</span> <span style="color: rgb(43,145,175)">XmlNamespaceManager</span>(WordDoc.NameTable);
+    NsMgr.AddNamespace(<span style="color: rgb(163,21,21)">"w"</span>, <span style="color: rgb(163,21,21)">"http://schemas.openxmlformats.org/wordprocessingml/2006/main"</span>);
+
+    <span style="color: rgb(0,128,0)">// Step 3 and step 4: Selecting the table node and the first row<br></span>    <span style="color: rgb(43,145,175)">XmlNode</span> TableNode = WordDoc.SelectSingleNode(<span style="color: rgb(163,21,21)">"//w:tbl"</span>, NsMgr);
+    <span style="color: rgb(43,145,175)">XmlNode</span> FirstRowNode = TableNode.SelectSingleNode(<span style="color: rgb(163,21,21)">".//w:tr[2]"</span>, NsMgr);
+    <span style="color: rgb(43,145,175)">XmlNode</span> NewNode = <span style="color: rgb(0,0,255)">null</span>, PreviousNode = <span style="color: rgb(0,0,255)">null</span>;</pre><pre class="code">    <span style="color: rgb(0,128,0)">// Step 5: Creating a new row in the row for each item in the invoice<br>    //         and update the content control databindings to bind to the <br>    //         appropriate element in the custom XML part</span>
+    <span style="color: rgb(0,0,255)">for</span> (<span style="color: rgb(0,0,255)">int</span> i = 0; i &lt; Invoice.InvoiceItems.Length; i++)
+    {
+        <span style="color: rgb(0,128,0)">// Current item
+</span>        <span style="color: rgb(43,145,175)">InvoiceElementInvoiceItem</span> Item = Invoice.InvoiceItems[i];
+
+        <span style="color: rgb(0,128,0)">// The first node can be modified directly
+</span>        <span style="color: rgb(0,0,255)">if</span> (NewNode == <span style="color: rgb(0,0,255)">null</span>)
+        {
+            PreviousNode = NewNode = FirstRowNode;
+        }
+        <span style="color: rgb(0,0,255)">else
+</span>        {
+            <span style="color: rgb(0,128,0)">// Keep the previous node to be able to 
+</span>            <span style="color: rgb(0,128,0)">// insert the node at the right position
+</span>            NewNode = FirstRowNode.CloneNode(<span style="color: rgb(0,0,255)">true</span>);
+            TableNode.InsertAfter(NewNode, PreviousNode);
+            PreviousNode = NewNode;
+        }
+
+        <span style="color: rgb(0,128,0)">// Update the SDT tags in the document
+</span><strong>        <span style="color: rgb(43,145,175)">XmlNodeList</span> SdtNodes = NewNode.SelectNodes(<span style="color: rgb(163,21,21)">".//w:sdt"</span>, NsMgr);
+        UpdateSdtNode(SdtNodes[0], i + 1, 1,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ItemNr_{0}"</span>, i), NsMgr);
+        UpdateSdtNode(SdtNodes[1], i + 1, 2,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ItemDescription_{0}"</span>, i), NsMgr);
+        UpdateSdtNode(SdtNodes[2], i + 1, 3,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ItemAmount_{0}"</span>, i), NsMgr);
+        UpdateSdtNode(SdtNodes[3], i + 1, 4,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ItemPrice_{0}"</span>, i), NsMgr);
+        UpdateSdtNode(SdtNodes[4], i + 1, 5,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ItemTotals_{0}"</span>, i), NsMgr);</strong>
+    }
+
+    <span style="color: rgb(0,128,0)">// Step 6: Save the XmlDocument back to the document.xml part<br></span>    <span style="color: rgb(0,0,255)">using</span> (<span style="color: rgb(43,145,175)">Stream</span> s = WordDocPart.GetStream(<span style="color: rgb(43,145,175)">FileMode</span>.Create))
+    {
+        WordDoc.Save(s);
+    }
+}</pre>
+<p>Most of the logic in this method is plain XML processing and should be nothing new for a .NET developer. The most interesting part is encapsulated in the UpdateSdtNode() method highlighted in bold in the previous code snippet. SDT is the abbreviation for <strong><em>Structured Document Tags</em></strong> and SDTs are actually the reflection of content controls in the XML part of the document. Taking a look at the following XML excerpt of a typicall Word document with a content control bound to parts of a custom XML will explain the most important parts of an SDT:</p><pre class="code"><span style="color: rgb(0,0,255)">&lt;</span><span style="color: rgb(163,21,21)">w:tr</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:rsidR</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">00204484</span>"<span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:rsidTr</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">00204484</span>"<span style="color: rgb(0,0,255)">&gt;
+  &lt;</span><span style="color: rgb(163,21,21)">w:trPr</span><span style="color: rgb(0,0,255)">&gt;
+    &lt;</span><span style="color: rgb(163,21,21)">w:cnfStyle</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">000000100000</span>"<span style="color: rgb(0,0,255)"> /&gt;
+  &lt;/</span><span style="color: rgb(163,21,21)">w:trPr</span><span style="color: rgb(0,0,255)">&gt;
+  &lt;</span><span style="color: rgb(163,21,21)">w:sdt</span><span style="color: rgb(0,0,255)">&gt;
+    &lt;</span><span style="color: rgb(163,21,21)">w:sdtPr</span><span style="color: rgb(0,0,255)">&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:dataBinding</span><span style="color: rgb(0,0,255)"> <br>          </span><span style="color: rgb(255,0,0)">w:prefixMappings</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">xmlns:ns0='blogs.msdn.com/mszcool/officeopenxml/generatingdocumentsseries/2007/07'</span>"<font color="#0000ff"><br>          </font><strong><span style="color: rgb(255,0,0)">w:xpath</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">/ns0:InvoiceElement[1]/ns0:InvoiceItems[1]/ns0:InvoiceItem[1]/ns0:ItemNumber[1]</span>"</strong><font color="#0000ff"><br>          </font><span style="color: rgb(255,0,0)">w:storeItemID</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">{C941DEB9-29BE-4021-950D-34892903E6EE}</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:rPr</span><span style="color: rgb(0,0,255)">&gt;
+        &lt;</span><span style="color: rgb(163,21,21)">w:lang</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">en-US</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;/</span><span style="color: rgb(163,21,21)">w:rPr</span><span style="color: rgb(0,0,255)">&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:alias</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">ItemNr_01</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:tag</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">ItemNr_01</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:id</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">17763868</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:placeholder</span><span style="color: rgb(0,0,255)">&gt;
+        &lt;</span><span style="color: rgb(163,21,21)">w:docPart</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">E5C03C5D0D364E298E9CFE332768F056</span>"<span style="color: rgb(0,0,255)"> /&gt;
+      &lt;/</span><span style="color: rgb(163,21,21)">w:placeholder</span><span style="color: rgb(0,0,255)">&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:showingPlcHdr</span><span style="color: rgb(0,0,255)"> /&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:text</span><span style="color: rgb(0,0,255)"> /&gt;
+    &lt;/</span><span style="color: rgb(163,21,21)">w:sdtPr</span><span style="color: rgb(0,0,255)">&gt;
+    &lt;</span><span style="color: rgb(163,21,21)">w:sdtContent</span><span style="color: rgb(0,0,255)">&gt;
+      &lt;</span><span style="color: rgb(163,21,21)">w:tc</span><span style="color: rgb(0,0,255)">&gt;
+        &lt;</span><span style="color: rgb(163,21,21)">w:tcPr</span><span style="color: rgb(0,0,255)">&gt;
+          &lt;</span><span style="color: rgb(163,21,21)">w:cnfStyle</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">001000000000</span>"<span style="color: rgb(0,0,255)"> /&gt;
+          &lt;</span><span style="color: rgb(163,21,21)">w:tcW</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:w</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">675</span>"<span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:type</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">dxa</span>"<span style="color: rgb(0,0,255)"> /&gt;
+        &lt;/</span><span style="color: rgb(163,21,21)">w:tcPr</span><span style="color: rgb(0,0,255)">&gt;
+        &lt;</span><span style="color: rgb(163,21,21)">w:p</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:rsidR</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">00204484</span>"<span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:rsidRDefault</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">00864DE0</span>"<span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:rsidP</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">00204484</span>"<span style="color: rgb(0,0,255)">&gt;
+          &lt;</span><span style="color: rgb(163,21,21)">w:pPr</span><span style="color: rgb(0,0,255)">&gt;
+            &lt;</span><span style="color: rgb(163,21,21)">w:rPr</span><span style="color: rgb(0,0,255)">&gt;
+              &lt;</span><span style="color: rgb(163,21,21)">w:lang</span><span style="color: rgb(0,0,255)"> </span><span style="color: rgb(255,0,0)">w:val</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">en-US</span>"<span style="color: rgb(0,0,255)"> /&gt;
+            &lt;/</span><span style="color: rgb(163,21,21)">w:rPr</span><span style="color: rgb(0,0,255)">&gt;
+          &lt;/</span><span style="color: rgb(163,21,21)">w:pPr</span><span style="color: rgb(0,0,255)">&gt;
+          &lt;</span><span style="color: rgb(163,21,21)">w:r</span><span style="color: rgb(0,0,255)">&gt;
+            &lt;</span><span style="color: rgb(163,21,21)">w:t</span><span style="color: rgb(0,0,255)">&gt;</span>0<span style="color: rgb(0,0,255)">&lt;/</span><span style="color: rgb(163,21,21)">w:t</span><span style="color: rgb(0,0,255)">&gt;
+          &lt;/</span><span style="color: rgb(163,21,21)">w:r</span><span style="color: rgb(0,0,255)">&gt;
+        &lt;/</span><span style="color: rgb(163,21,21)">w:p</span><span style="color: rgb(0,0,255)">&gt;
+      &lt;/</span><span style="color: rgb(163,21,21)">w:tc</span><span style="color: rgb(0,0,255)">&gt;
+    &lt;/</span><span style="color: rgb(163,21,21)">w:sdtContent</span><span style="color: rgb(0,0,255)">&gt;
+  &lt;/</span><span style="color: rgb(163,21,21)">w:sdt</span><span style="color: rgb(0,0,255)">&gt;<br><strong><em>  ........ other tags .........</em></strong>
+</span><span style="color: rgb(0,0,255)">&lt;/</span><span style="color: rgb(163,21,21)">w:tr</span><span style="color: rgb(0,0,255)">&gt;</span></pre><a href="http://11011.net/software/vspaste"></a>
+<p>The XML is just an excerpt of one table row showing the SDT tag for the content control which is bound to the ItemNumber element of the first InvoiceItem stored in the custom XML of our package. You can see this when taking a look at the <strong>dataBinding</strong> element of the SDT tag where you find an XPath expression mapping to an element in our custom XML:</p>
+<p><span style="color: rgb(255,0,0)">w:xpath</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">/ns0:InvoiceElement[1]/ns0:InvoiceItems[1]/ns0:InvoiceItem[1]/ns0:ItemNumber[1]</span>"</p>
+<p>As you can see, this XPath maps to the first ItemNumber element in the first InvoiceItem element of the first InvoiceItems element within the first InvoiceElement of our custom XML (based on the indexes [1] used in the XPath). If we want to update the databinding of a content control we need to update this XPath expression to map to the invoice item in our custom XML we want to display in a certain table row of our Word table - e.g. if we want to map to the third invoice item the XPath would look as follows:</p>
+<p><span style="color: rgb(255,0,0)">w:xpath</span><span style="color: rgb(0,0,255)">=</span>"<span style="color: rgb(0,0,255)">/ns0:InvoiceElement[1]/ns0:InvoiceItems[1]/ns0:InvoiceItem<strong><em>[3]</em></strong>/ns0:ItemNumber[1]</span>"</p>
+<p>Everything in our XPath stays the same, we just update the index of the invoice item to map to the third InvoiceItem element of the custom XML part we serialized into our package with the UpdateCustomXml() method before. Furthermore we need to update attribute <strong>w:val</strong> for the <strong>w:alias</strong> and the <strong>w:id</strong> tags as they need to be unique for each content control. The value of the&nbsp;<strong>w:alias</strong> can be any value you want whereas the <strong>w:id</strong> value needs to be a integer. These updates are performed all together in the <strong><em>UpdateSdtNode()</em></strong> method used in our previous code snippet (UpdateWordDocument() method). It sounds complicated but it is fairly simple:</p><pre class="code"><span style="color: rgb(0,0,255)">private</span> <span style="color: rgb(0,0,255)">void</span> UpdateSdtNode(<span style="color: rgb(43,145,175)">XmlNode</span> xmlNode, <span style="color: rgb(0,0,255)">int</span> index, <span style="color: rgb(0,0,255)">int</span> elementIndex, <span style="color: rgb(0,0,255)">string</span> alias, <span style="color: rgb(43,145,175)">XmlNamespaceManager</span> nsMgr)
+{
+    <span style="color: rgb(43,145,175)">XmlNode</span> HelperNode = <span style="color: rgb(0,0,255)">null</span>;
+
+    <span style="color: rgb(0,128,0)">// Update the databinding node
+</span>    HelperNode = xmlNode.SelectSingleNode(<span style="color: rgb(163,21,21)">".//w:sdtPr/w:dataBinding"</span>, nsMgr);
+    HelperNode.Attributes[<span style="color: rgb(163,21,21)">"w:xpath"</span>].Value =
+        HelperNode.Attributes[<span style="color: rgb(163,21,21)">"w:xpath"</span>].Value.Replace
+        (
+            <span style="color: rgb(163,21,21)">"ns0:InvoiceItem[1]"</span>,
+            <span style="color: rgb(0,0,255)">string</span>.Format(<span style="color: rgb(163,21,21)">"ns0:InvoiceItem[{0}]"</span>, index)
+        );
+
+    <span style="color: rgb(0,128,0)">// Update the alias and tag nodes
+</span>    HelperNode = xmlNode.SelectSingleNode(<span style="color: rgb(163,21,21)">".//w:sdtPr/w:alias"</span>, nsMgr);
+    HelperNode.Attributes[<span style="color: rgb(163,21,21)">"w:val"</span>].Value = alias;
+    HelperNode = xmlNode.SelectSingleNode(<span style="color: rgb(163,21,21)">".//w:sdtPr/w:tag"</span>, nsMgr);
+    HelperNode.Attributes[<span style="color: rgb(163,21,21)">"w:val"</span>].Value = alias;
+
+    <span style="color: rgb(0,128,0)">// Update the ID node
+</span>    HelperNode = xmlNode.SelectSingleNode(<span style="color: rgb(163,21,21)">".//w:sdtPr/w:id"</span>, nsMgr);
+    HelperNode.Attributes[<span style="color: rgb(163,21,21)">"w:val"</span>].Value =
+        (1000000 + (elementIndex * 1000) + (index * 10)).ToString();
+
+}</pre>
+<p><a href="http://11011.net/software/vspaste"></a>That's it, now we have generated a Word document by dynamically extending the Word table &lt;w:tbl/&gt; and generating new Structured Document Tags (&lt;w:sdt /&gt;) for each row which are in turn bound to content of our custom XML structure.</p>
+<p>You can download the most recent version of application including the code introduced in this blog post by clicking on the link below:</p>
+<p><a href="http://mszcool.members.winisp.net/Demos/072007_OpenXmlBlog/OfficeOpenXmlBlog_v2.zip">Download sample code</a></p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

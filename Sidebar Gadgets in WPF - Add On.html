@@ -1,0 +1,23 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Sidebar Gadgets in WPF - Add On</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    4/28/2006 4:39:00 AM</time>
+<hr>
+<div id='content'><P><FONT face=Verdana size=2>After some discussions with the team they confirmed, that this will work with RTM, but there are a couple of limitations we should be aware of:</FONT></P>
+<UL>
+<LI><FONT face=Verdana size=2>We cannot really communicate between the hosted WPF page and the gadget.</FONT></LI>
+<LI><FONT face=Verdana size=2>Therefore we don't have access to the JavaScript APIs provided by the Sidebar gadget API and</FONT></LI>
+<LI><FONT face=Verdana size=2>we don't have access to the Sidebar events from within the WPF page hosted through an IFRAME in the gadget.</FONT></LI>
+<LI><FONT face=Verdana size=2>And of course we have to be aware of Code Access Security, which shouldn't be an issue for enterprise-level applications (especially for those who are already using URL-launched .NET applications today:))</FONT></LI></UL>
+<P><FONT face=Verdana size=2>In the end <STRONG>I am very excited about the option of hosting WPF through IFRAME in a gadget</STRONG> because it's much easier creating a gadget that communicates with more complex web&nbsp;services in a much easier way than it is possible through the (in <STRONG>my opinion </STRONG>"limited") JavaScript APIs.</FONT></P>
+<P><FONT face=Verdana size=2>What does it mean? Well, everybody has the option! Create richer, WPF based pages for integrating with complex back-end applications and with other client applications like Outlook (as calling into Outlook or other client apps is much easier from a .NET based application than from JavaScript) or creating the nice, little, fancy JavaScript / DHTML based Sidebar gadgets...</FONT></P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

@@ -1,0 +1,26 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>CAB/SCSF and Workflow Integration - Demo Update from last TechEd</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    6/4/2008 2:51:00 PM</time>
+<hr>
+<div id='content'><P>Attached you can find an updated version of the demos <A class="" href="http://blogs.msdn.com/mszcool/archive/2007/11/07/teched-2007-tla406-downloads-cab-solution-patterns.aspx" mce_href="http://blogs.msdn.com/mszcool/archive/2007/11/07/teched-2007-tla406-downloads-cab-solution-patterns.aspx">I've presented at TechEd Europe 2007</A>. I figured out that under some circumstances the downloaded demo does not really work and so I included some fixes as in the following bullet-list.</P>
+<P><STRONG><A class="" href="http://mszcool.members.winisp.net/Demos/112007_TechEdDevelopers/AdvancedCabDemo.zip" mce_href="http://mszcool.members.winisp.net/Demos/112007_TechEdDevelopers/AdvancedCabDemo.zip">You can download the updated version here!!!</A></STRONG></P>
+<P><STRONG>Important Note: You need to have SQL Server Compact Edition 2005 (version 3.1) installed on your machine. Visual Studio 2008 ships with version 3.5 instead of 3.1 and the database file formats are incompatible. <A class="" href="http://www.microsoft.com/downloads/details.aspx?FamilyID=85e0c3ce-3fa1-453a-8ce9-af6ca20946c3&amp;DisplayLang=en" mce_href="http://www.microsoft.com/downloads/details.aspx?FamilyID=85e0c3ce-3fa1-453a-8ce9-af6ca20946c3&amp;DisplayLang=en">So download the SQL CE 2005 (v3.1) runtime here...</A></STRONG></P>
+<UL>
+<LI>Fixed some bugs in the Workflow integration</LI>
+<LI>Added the required Backend Web Services (NorthwindServices) to the solution.</LI>
+<LI>Added the data base required by the Northwind Services in the App_Data directory - you need to have SQLEXPRESS on your machine, then the web services "just work".</LI>
+<LI>Updated the Web Service URLs in the Shell's app.config configuration to point to the localhost integrated web server that runs the Northwind Services</LI>
+<LI>Updated the SQL Server Compact Database for the Offline Disconnected Agent request queue. Unfortunately the database was corrupted in my original download - I am very sorry about that.</LI></UL>
+<P>Well - after so long time being quiet on my blog you might ask why I am updating the demo right now. Well, first -i've got enought feedback now to do so:)) and second we've applied the concepts in a customer project and I am publishing an architecture&nbsp;whitepaper about that, soon, where I refer to this demo. So a working version would be a good starting point. Take a look at the blog attachment and give me feedback if you are not able to get the stuff running...</P>
+<P>Cheers<BR><STRONG>Mario</STRONG></P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

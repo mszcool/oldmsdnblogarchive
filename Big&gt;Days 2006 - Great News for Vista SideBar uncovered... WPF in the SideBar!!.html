@@ -1,0 +1,29 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Big&gt;Days 2006 - Great News for Vista SideBar uncovered... WPF in the SideBar!!</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    4/25/2006 12:21:00 PM</time>
+<hr>
+<div id='content'><P><FONT face=Verdana size=2>I am currently working on the Demos for our local <A href="http://www.microsoft.com/austria/events/bigdays">Big&gt;Days 2006 road show</A> for Windows Vista and Windows Presentation Foundation. Originally the Windows Vista team claimed, that they will have no&nbsp;support for WPF in the SideBar. That was actually very disappointing for me.</FONT></P>
+<P><FONT face=Verdana size=2>But... the cool thing is... there is a little workaround and I already got confirmation from SideBar team, that this scenario will be supported for RTM. So finally you can create sidebar gadgets with Windows Presentation Foundation. And that's how the workaround works:</FONT></P>
+<OL>
+<LI><FONT face=Verdana size=2>First of all create a <A href="http://windowssdk.msdn.microsoft.com/library/default.asp?url=/library/en-us/wpf_conceptual/html/0d1b40a7-069c-4832-9764-b1c6bb8900df.asp">WPF Browser Application project</A> with Visual Studio 2005</FONT> 
+<LI><FONT face=Verdana size=2>Publish the WPF Browser Based application with Visual Studio 2005</FONT> 
+<LI><FONT face=Verdana size=2>To make sure if everything works open a browser and browse to the "*.xbap" file with your browser. This is the WPF Browser Application manifest file, which will be created when publishing the application to a web server. Even just a simple "Compile" in VS 2005 using Orcas extensions will create this file.</FONT> 
+<LI><FONT face=Verdana size=2>Then create a gadget using simple, plain HTML.</FONT> 
+<LI><FONT face=Verdana size=2>Within the HTML for the gadget you can embed the browser-based WPF application through an IFRAME as follows.</FONT> 
+<LI><FONT face=Verdana size=2>Finally as browser-gadgets run in a sand-box you have to deploy code access security policies. The best way for doing so is assigning a strong name to your project file and adding a policy to your machine level policies to trust based on the strong name of the WPF browser app's exe code beside.</FONT> 
+<LI><FONT face=Verdana size=2>That's it, you are done:)</FONT></LI></OL>
+<P><FONT face=Verdana size=2>Suppose you have the WPF browser project created in the directory of the gadget you can use the following IFRAME for embedding the gadget (unfortunately with February CTP you have to specify the full path to the WPF browser page... don't know if that's going to change with the release):</FONT></P>
+<P><FONT face="Courier New" size=2>&lt;h2&gt;Hi there&lt;/h2&gt;&lt;br /&gt;<BR>&lt;table width="100%" border="0"&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;tr align="center"&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;td&gt;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;iframe height="220" <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; width="140" <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src="<EM><STRONG>%fullpathtoyourgadgetdirectory%</STRONG></EM>\TestBrowserApp.xbap" /&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;/td&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;/tr&gt;<BR>&lt;/table&gt;</FONT></P>
+<P><FONT face=Verdana size=2>In the end I really feel much more relaxed about gadgets now. Because using WPF in your gadgets really gives you the opportunity for creating cool, useful and practical gadgets...</FONT></P>
+<P><FONT face=Verdana size=2>For more details about creating gadgets just go to <A href="http://microsoftgadgets.com/build">http://microsoftgadgets.com/build</A> and take a look at the articles posted there...</FONT></P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

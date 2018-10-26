@@ -1,0 +1,18 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>XSL/T and IntelliSense in VS.NET</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    2/16/2004 9:11:00 PM</time>
+<hr>
+<div id='content'><P><SPAN lang=EN-US style="mso-ansi-language: EN-US">As I will hold an XML Workshop focused on XSD, XPath and XSL/T for&nbsp;a large group of employees of a&nbsp;customer tomorrow, I have tried many things with XSL/T during the last few days. The annoying thing with XLS/T is not only, that it is hard to read when getting more and more complex (remember my last posting), but you even don't have IntelliSense in Visual Studio .NET.<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">Fortunately there is a very easy possibility for getting IntelliSense support (look at the article from Aron Skonnard in the January Web Q&amp;A of MSDN Magazine <A href="http://msdn.microsoft.com/msdnmag/issues/04/01/XMLFiles/">http://msdn.microsoft.com/msdnmag/issues/04/01/XMLFiles/</A>), because Visual Studio <?xml:namespace prefix = st1 ns = "urn:schemas-microsoft-com:office:smarttags" /><st1:mswterms w:st="on">.NET</st1:mswterms> has a built-in generic IntelliSense mechanism based on XML Schema for tag oriented languages like HTML, XML, XSD and so forth.<o:p></o:p></SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">Thus, all you need, is a schema for XSL/T (which is not easy to find, because the W3C does not have created one). Just navigate to <A href="http://www.fesersoft.com/dotNet/">http://www.fesersoft.com/dotNet/</A> and look for XSL on the page. It seems to be a nearly complete schema for XSL/T. You need to download the ZIP archive and put the <B style="mso-bidi-font-weight: normal">xslt.xsd</B> file (I have renamed it to <I style="mso-bidi-font-style: normal">xsltschema.xsd</I>) into the schema directory of Visual Studio .NET which is located in the <B style="mso-bidi-font-weight: normal">Common7\Packages\schemas\xml</B> directory of the Visual Studio .NET program files folder. After you have copied the file into this directory, create a new XSL/T document and try it out.</SPAN></P></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

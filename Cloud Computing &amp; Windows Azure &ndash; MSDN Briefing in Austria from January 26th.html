@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Cloud Computing &amp; Windows Azure &ndash; MSDN Briefing in Austria from January 26th</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/mszCool [mario]' target='_blank'>mszCool [mario]</a>
+<time>    2/10/2010 2:14:37 AM</time>
+<hr>
+<div id='content'><p>On January 26th I presented at our MSDN-Briefing on <strong>Cloud Computing</strong> and <strong>Windows Azure</strong>. During the session I introduced our (and my) point-of-view on Cloud Computing. Within the demos I migrated my good old <a href="http://blogs.msdn.com/mszcool/archive/2009/06/16/technical-university-of-vienna-presentation-from-last-week-building-a-micro-blog-engine-with-asp-net-3-5-and-asp-net-ajax.aspx">MicroBlog sample</a> I created for a presentation at the technical university of Vienna last year to run on Windows Azure.</p>  <p align="center">Downloads: <a href="http://cid-d37c9d7bfbce8418.skydrive.live.com/self.aspx/Public/MSDN%20Briefing/20100126-MsdnBriefingAzure.pdf">presentation here</a>, <a href="http://cid-d37c9d7bfbce8418.skydrive.live.com/self.aspx/Public/MSDN%20Briefing/20100126-MsdnBriefingAzure.zip">demo here</a></p>  <p align="center"><a href="http://www.codefest.at/post/2010/02/10/Cloud-Computing-Tutorial-10-e28093-MSDN-Briefing-vom-2612010.aspx">Codefest.at posting incl. links to recordings (German, only)</a></p>  <p>Here are the little challenges I had for the migration outlined (please note, that this is just a simple sample – for bigger apps you definitely will run in some more issues – Rainer Stropek and I will talk about these in our Session at BigDays 2010 in March):</p>  <ol>   <li>MicroBlog was a Web Site project – Azure requires Web Application Projects. So I had to convert the project. For doing so, follow these steps:</li>    <ol>     <ol>       <li>Create a new Web Application Project in the same solution as you have your Web Site Project.</li>        <li>Copy all Contents from the Web Site Project to the Web Application Project.</li>        <li>Right-click the web application project and select “Convert to Web Application Project” from the context menu.</li>        <li>Fix remaining compile errors or other errors (namespace changes etc.)</li>     </ol>   </ol>    <li>The ASP.NET Membership API and Roles API scripts and aspnet_regsql both do not work on SQL Azure because they’re using features not supported by SQL Azure. Fortunately Microsoft released a fixed set of scripts and a tool called aspnet_regsqlazure to solve this problem and make Membership API and Roles API available for SQL Azure: </li>    <ol>     <ol>       <li><a href="http://code.msdn.microsoft.com/KB2006191">http://code.msdn.microsoft.com/KB2006191</a></li>     </ol>   </ol> </ol>  <p>The remaining parts of the application worked pretty well, of course I extended it during the briefing to use Blob- and Table-Storage. But more on that hopefully in later posts.</p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>
